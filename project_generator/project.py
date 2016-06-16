@@ -308,13 +308,13 @@ class Project:
             if include_file:
                 if os.path.isdir(include_file):
                    # its a directory
-                    dir_path = include_file
+                    dir_path = os.path.normpath(include_file)
                     # get all files from dir
                     include_files = []
                     try:
                         for f in os.listdir(dir_path):
-                            if os.path.isfile(os.path.join(os.path.normpath(dir_path), f)) and f.split('.')[-1].lower() in FILES_EXTENSIONS['include_files']:
-                                include_files.append(os.path.join(os.path.normpath(dir_path), f))
+                            if os.path.isfile(os.path.join(dir_path, f)) and f.split('.')[-1].lower() in FILES_EXTENSIONS['include_files']:
+                                include_files.append(os.path.join(dir_path, f))
                     except:
                         # TODO: catch only those exceptions which are relevant
                         logger.debug("The includes is not accessible: %s" % include_file)
@@ -323,9 +323,9 @@ class Project:
                 else:
                     # include files are in groups as sources
                     self.project['export']['include_files'][use_group_name].append(os.path.normpath(include_file))
-                    dir_path = os.path.dirname(include_file)
-                if not os.path.normpath(dir_path) in self.project['export']['include_paths']:
-                    self.project['export']['include_paths'].append(os.path.normpath(dir_path))
+                    dir_path = os.path.normpath(os.path.dirname(include_file))
+                if not dir_path in self.project['export']['include_paths']:
+                    self.project['export']['include_paths'].append(dir_path)
 
     def _process_source_files(self, files, use_group_name='default'):
         use_sources = []
