@@ -229,10 +229,14 @@ class Uvision(Tool, Builder, Exporter):
 
     def _uvproj_set_DebugOption(self, uvproj_dic, project_dic):
         self._uvproj_clean_xmldict(uvproj_dic)
-        self._uvproj_clean_xmldict(uvproj_dic['SimDlls'])
-        self._uvproj_clean_xmldict(uvproj_dic['Simulator'])
-        self._uvproj_clean_xmldict(uvproj_dic['Target'])
-        self._uvproj_clean_xmldict(uvproj_dic['TargetDlls'])
+        # newer template does not have these in uvproj, keep it backward compatible so just try
+        try:
+            self._uvproj_clean_xmldict(uvproj_dic['SimDlls'])
+            self._uvproj_clean_xmldict(uvproj_dic['Simulator'])
+            self._uvproj_clean_xmldict(uvproj_dic['Target'])
+            self._uvproj_clean_xmldict(uvproj_dic['TargetDlls'])
+        except KeyError:
+            pass
 
     def _uvproj_set_DllOption(self, uvproj_dic, project_dic):
         self._uvproj_clean_xmldict(uvproj_dic)
